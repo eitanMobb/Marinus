@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -65,7 +66,7 @@ module.exports = {
   CertTransModel: certTransModel,
   getCertTransOrgPromise: function (org) {
     return certTransModel.find({
-      'subject_organization_name': { $in: org },
+      'subject_organization_name': mongoSanitize.sanitize({ data: { $in: org } }).data,
     }).exec();
   },
   getCertTransCNPromise: function (domain) {
