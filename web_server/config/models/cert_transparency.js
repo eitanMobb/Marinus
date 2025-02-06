@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -130,7 +131,7 @@ module.exports = {
     }
 
     if (count) {
-      return certTransModel.countDocuments({ 'serial_number': serial_number.toLowerCase() }).exec();
+      return certTransModel.countDocuments({ 'serial_number': mongoSanitize.sanitize({ data: serial_number.toLowerCase() }).data }).exec();
     }
 
     return certTransModel.find({ 'serial_number': serial_number.toLowerCase() }).exec();
