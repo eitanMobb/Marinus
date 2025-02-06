@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -41,7 +42,7 @@ module.exports = {
          * Fetch all DNS records for the provided zone.
          * (Optional) Limit to the provided source.
          */
-        let query = { 'zone': zone };
+        let query = { 'zone': mongoSanitize.sanitize({ data: zone }).data };
         if (source != null) {
             query['sources.source'] = source;
         }
@@ -59,7 +60,7 @@ module.exports = {
          * Fetch all DNS records associated to the provided FQDN.
          * (Optional) Limit to the provided source.
          */
-        let query = { 'fqdn': domain };
+        let query = { 'fqdn': mongoSanitize.sanitize({ data: domain }).data };
         if (source != null) {
             query['sources.source'] = source;
         }
@@ -72,7 +73,7 @@ module.exports = {
          */
         let query = {
             'type': 'a',
-            'value': ip,
+            'value': mongoSanitize.sanitize({ data: ip }).data,
         };
         if (source != null) {
             query['sources.source'] = source;
@@ -86,7 +87,7 @@ module.exports = {
          */
         let query = {
             'type': 'aaaa',
-            'value': ip,
+            'value': mongoSanitize.sanitize({ data: ip }).data,
         };
         if (source != null) {
             query['sources.source'] = source;
@@ -197,7 +198,7 @@ module.exports = {
          * (Optional) Limit the search with zone and/or source.
          * Return either the records or the count of the records.
          */
-        let search = { 'type': type };
+        let search = { 'type': mongoSanitize.sanitize({ data: type }).data };
         if (zone) {
             search['zone'] = zone;
         }
